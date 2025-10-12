@@ -2,10 +2,11 @@
 <html>
 <head>
     <title>NestBooks Library</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f8f8f8;
+            background-color: #f4f4f9;
             margin: 0;
             padding: 20px;
         }
@@ -13,95 +14,225 @@
         h1 {
             text-align: center;
             margin-bottom: 30px;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+
+        /* العمود الرئيسي للكتب */
+        .main-books {
+            flex: 3;
         }
 
         .books-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* أصغر حجم للبطاقة */
-            gap: 10px; /* تقليل المسافة بين البطاقات */
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
         }
 
         .book-card {
             background-color: #fff;
-            border-radius: 6px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            padding: 8px; /* تقليل الحشو أكثر */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 10px;
             display: flex;
             flex-direction: column;
-            transition: transform 0.2s;
-            max-width: 180px; /* تحديد الحد الأقصى للعرض */
-            margin: auto;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
         .book-card:hover {
             transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
         }
 
         .book-card img {
             width: 100%;
-            height: 150px; /* تصغير الصورة أكثر */
+            height: 150px;
             object-fit: cover;
-            border-radius: 4px;
-            margin-bottom: 6px;
+            border-radius: 6px;
+            margin-bottom: 8px;
         }
 
         .book-title {
-            font-size: 14px; /* أصغر حجم للعنوان */
+            font-size: 14px;
             font-weight: bold;
+            margin: 2px 0;
+            color: #222;
+        }
+
+        .book-author,
+        .book-price,
+        .book-status {
+            font-size: 12px;
+            color: #555;
             margin: 2px 0;
         }
 
-        .book-category,
-        .book-author,
-        .book-price,
-        .book-status,
-        .book-date,
-        .book-votes,
-        .book-description {
-            font-size: 11px; /* تصغير النصوص */
-            color: #555;
-            margin: 1px 0;
+        .book-rating {
+            color: #0fadc9ff;
+            font-size: 12px;
+            margin-bottom: 4px;
         }
 
-        .book-rating {
-            color: #FFA500;
-            font-size: 11px; /* أصغر نجوم */
-            margin-bottom: 2px;
+        /* العمود الجانبي: الأقسام + Pie Chart */
+        .sidebar {
+            flex: 1;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
         }
+
+        .sidebar h3 {
+            margin-top: 0;
+            color: #444;
+            border-bottom: 2px solid #0fadc9ff;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+
+        .category {
+            margin-bottom: 15px;
+        }
+
+        .category strong {
+            display: block;
+            background-color: #0fadc9ff;
+            color: #fff;
+            padding: 8px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .category strong:hover {
+            background-color: #0fadc9ff;
+        }
+
+        .category ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin-top: 5px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .category ul li {
+            background-color: #f4f4f9;
+            margin: 3px 0;
+            padding: 5px 8px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+
+        .category ul li:hover {
+            background-color: #e6e6f0;
+        }
+
+        .category ul::-webkit-scrollbar {
+            width: 6px;
+        }
+        .category ul::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+            border-radius: 3px;
+        }
+
+        /* Pie Chart Container */
+        .chart-container {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
     </style>
 </head>
 <body>
     <h1>Welcome to NestBooks Library</h1>
-    <div class="books-container">
-        {% for book in books %}
-            <div class="book-card">
-                {% if book.photo_book %}
-                    <img src="{{ book.photo_book.url }}" alt="{{ book.title }}">
-                {% else %}
-                    <img src="https://via.placeholder.com/150x150" alt="No Image">
-                {% endif %}
-                <div class="book-title">{{ book.title }}</div>
-                
-                <div class="book-rating">
-                    {% for i in "★★★★★" %}
-                        {% if forloop.counter <= book.rating %}
-                            ★
+
+    <div class="container">
+        <!-- العمود الرئيسي: جميع الكتب -->
+        <div class="main-books">
+            <div class="books-container">
+                {% for book in books %}
+                    <div class="book-card">
+                        {% if book.photo_book %}
+                            <img src="{{ book.photo_book.url }}" alt="{{ book.title }}">
                         {% else %}
-                            ☆
+                            <img src="https://via.placeholder.com/150x150" alt="No Image">
                         {% endif %}
-                    {% endfor %}
-                </div>
-
-                <div class="book-author">Author: {{ book.author }}</div>
-                <div class="book-category">Category: {{ book.category.name }}</div>
-                <div class="book-price">Price: ${{ book.price }}</div>
-                <div class="book-status">Status: {{ book.status }}</div>
-                <div class="book-date">Published: {{ book.published_date }}</div>
-                <div class="book-votes">{{ book.votes }} Votes</div>
-
-                <div class="book-description">{{ book.description }}</div>
+                        <div class="book-title">{{ book.title }}</div>
+                        <div class="book-rating">
+                            {% for i in "★★★★★" %}
+                                {% if forloop.counter <= book.rating %}
+                                    ★
+                                {% else %}
+                                    ☆
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="book-author">Author: {{ book.author }}</div>
+                        <div class="book-price">Price: ${{ book.price }}</div>
+                        <div class="book-status">Status: {{ book.status }}</div>
+                    </div>
+                {% endfor %}
             </div>
-        {% endfor %}
+        </div>
+
+        <!-- العمود الجانبي: Pie Chart + الأقسام -->
+        <div class="sidebar">
+            <h3>Books Distribution</h3>
+            <div class="chart-container">
+                <canvas id="booksPieChart"></canvas>
+            </div>
+
+            <h3>Categories</h3>
+            {% for category in categories %}
+                <div class="category">
+                    <strong>{{ category.name }}</strong>
+                    <ul>
+                        {% for book in category.book_set.all %}
+                            <li>{{ book.title }}</li>
+                        {% empty %}
+                            <li>No books</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
     </div>
+
+    <script>
+        const ctx = document.getElementById('booksPieChart').getContext('2d');
+        const myPieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: {{ chart_labels|safe }},
+                datasets: [{
+                    label: 'Books per Category',
+                    data: {{ chart_data|safe }},
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(153, 102, 255, 0.6)',
+                        'rgba(255, 159, 64, 0.6)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    </script>
 </body>
 </html>
