@@ -17,21 +17,23 @@
     <h2 style="margin-bottom:10px;">{{ book.title }}</h2>
 
     <p>
-        Rating: 
-        {% for i in "★★★★★" %}
-            {% if forloop.counter <= book.rating %}
-                ★
-            {% else %}
-                ☆
-            {% endif %}
-        {% endfor %}
-    </p>
+    Rating: 
+    {% for i in "★★★★★" %}
+        {% if forloop.counter <= book.rating %}
+            <span style="color: #eba121ff;">★</span>
+        {% else %}
+            <span style="color: #ccc;">☆</span>
+        {% endif %}
+    {% endfor %}
+</p>
+
 
     <p><strong>Author:</strong> {{ book.author }}</p>
-
+    
+    <p><strong>Category:</strong> {{ book.category }}</p>
+    
     <p><strong>Price:</strong> ${{ book.price }}</p>
-
-
+   
     <p><strong>Status:</strong> {{ book.status }}</p>
 
     <p><strong>Description:</strong></p>

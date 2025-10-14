@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Add Book{% endblock %}
+{% block title %}{% if is_edit %}Edit Book{% else %}Add Book{% endif %}{% endblock %}
 
 {% block content %}
 <style>
@@ -8,7 +8,7 @@
     display: flex;
     justify-content: center;
     margin: 40px auto;
-    padding: 20px;
+    padding: 10px;
     max-width: 600px;
 }
 
@@ -16,8 +16,8 @@
     width: 100%;
     background-color: #fff;
     border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    padding: 25px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    padding: 25px 30px;
 }
 
 .book-form h2 {
@@ -28,38 +28,77 @@
     margin-bottom: 25px;
 }
 
-.book-form input[type="text"],
-.book-form input[type="number"],
-.book-form input[type="file"],
-.book-form select,
-.book-form textarea {
+.form-row {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.form-row label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.form-row input[type="text"],
+.form-row input[type="number"],
+.form-row input[type="file"],
+.form-row select,
+.form-row textarea {
     width: 100%;
     padding: 8px 12px;
-    margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 15px;
+    background-color: #fafafa;
     transition: border-color 0.3s;
 }
 
-.book-form input:focus,
-.book-form select:focus,
-.book-form textarea:focus {
+.form-row textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+.form-row input:focus,
+.form-row select:focus,
+.form-row textarea:focus {
     border-color: #2f9fc4;
     outline: none;
+    background-color: #fff;
+}
+
+.add-category-btn {
+    background-color: #ffb300;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.add-category-btn:hover {
+    background-color: #e6a000;
+}
+
+.category-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .button-group {
+    margin-top: 25px;
     text-align: center;
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
     gap: 15px;
 }
 
 .btn {
-    padding: 10px 20px;
-    border-radius: 10px;
+    padding: 8px 20px;
+    border-radius: 8px;
     border: none;
     cursor: pointer;
     color: white;
@@ -67,6 +106,7 @@
     transition: all 0.3s;
     text-decoration: none;
     display: inline-block;
+    font-size: 14px;
 }
 
 .btn:hover { transform: scale(1.05); }
@@ -91,13 +131,14 @@ body.dark-mode textarea {
 
 <div class="manage-container">
     <div class="book-form">
-        <h2>Add New Book</h2>
+        <h2>{% if is_edit %}Edit Book{% else %}Add New Book{% endif %}</h2>
 
         {% if messages %}
           {% for message in messages %}
-            <div style="padding:10px; border-radius:8px; margin-bottom:10px;
+            <div style="padding:10px; border-radius:8px; margin-bottom:12px;
                         background-color:{% if message.tags == 'error' %}#ffdddd{% else %}#ddffdd{% endif %};
-                        color:{% if message.tags == 'error' %}#a00{% else %}#060{% endif %};">
+                        color:{% if message.tags == 'error' %}#a00{% else %}#060{% endif %};
+                        font-weight: 500;">
                 {{ message }}
             </div>
           {% endfor %}
@@ -105,10 +146,30 @@ body.dark-mode textarea {
 
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ form.as_p }}
+            {% for field in form %}
+                {% if field.name == 'category' %}
+                    <div class="form-row">
+                        {{ field.label_tag }}
+                        <div class="category-row">
+                            {{ field }}
+                            <button type="button"
+                                    class="add-category-btn"
+                                    onclick="window.location.href='{% url 'add_category' %}?next={{ request.path }}'">+
+                            </button>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="form-row">
+                        {{ field.label_tag }}
+                        {{ field }}
+                    </div>
+                {% endif %}
+            {% endfor %}
 
             <div class="button-group">
-                <button type="submit" class="btn btn-green">Save 💾</button>
+                <button type="submit" class="btn btn-green">
+                    {% if is_edit %}Update 💾{% else %}Save 💾{% endif %}
+                </button>
                 <a href="{% url 'home' %}" class="btn btn-orange">🏠 Back</a>
             </div>
         </form>

@@ -28,7 +28,7 @@ urlpatterns = [
     
     path('books/add-category/', add_category, name='add_category'),
     path('books/add/', add_book, name='add_book'),
-    path('books/edit/<int:id>/', edit_book, name='edit_book'),
+    
     path('books/delete/<int:id>/', delete_book, name='delete_book'),
     path('logout/', user_logout, name='logout'),
     path('books/category/edit/<int:id>/', edit_category, name='edit_category'),
@@ -36,6 +36,7 @@ urlpatterns = [
     path('books/manage_categories/', views.manage_categories, name='manage_categories'),
     path('books/delete_categories/', views.delete_categories, name='delete_categories'),
     path('book/<int:id>/', views.book_detail, name='book_detail'),
+    path('books/edit/<int:book_id>/', edit_book, name='edit_book'),
 
 
 ]

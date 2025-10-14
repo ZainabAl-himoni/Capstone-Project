@@ -74,16 +74,23 @@ def add_book(request):
         form = BookForm()
     return render(request, 'books/add_book.html', {'form': form})
 
-def edit_book(request, id):
-    book = get_object_or_404(Book, id=id)
-    if request.method == "POST":
+def edit_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    if request.method == 'POST':
         form = BookForm(request.POST, request.FILES, instance=book)
         if form.is_valid():
             form.save()
+            messages.success(request, "Book updated successfully ✅")
             return redirect('home')
     else:
         form = BookForm(instance=book)
-    return render(request, 'books/edit_book.html', {'form': form})
+
+    return render(request, 'books/add_book.html', {
+        'form': form,
+        'is_edit': True,
+        'book': book
+    })
+
 
 
 def delete_book(request, id):
@@ -94,25 +101,27 @@ def delete_book(request, id):
     return render(request, 'books/delete_book.html', {'book': book})
 
 
-
-from django.contrib import messages
-from django.shortcuts import render, redirect
-
 def add_category(request):
+    next_url = request.GET.get('next', '/home/')
+    # أضف anchor للـ Category
+    if not next_url.endswith('#id_category'):
+        if '#' in next_url:
+            next_url = next_url.split('#')[0] + '#id_category'
+        else:
+            next_url += '#id_category'
+
     if request.method == 'POST':
-        name = request.POST.get('name', '').strip()  
+        name = request.POST.get('name', '').strip()
         if name:
             if Category.objects.filter(name__iexact=name).exists():
                 messages.error(request, "Category already exists.")
             else:
                 Category.objects.create(name=name)
                 messages.success(request, "Category added successfully!✅")
-                return redirect('manage_categories')  
+                return redirect(next_url)  # إعادة التوجيه مع anchor
         else:
             messages.error(request, "Please enter a category name.")
-    
     return render(request, 'books/add_category.html')
-
 
 def edit_category(request, id):
     category = get_object_or_404(Category, id=id)
@@ -136,11 +145,7 @@ def delete_category(request, id):
     messages.error(request, "Invalid request method.")
     return redirect('home')
 
-from django.shortcuts import render, redirect
-from .models import Category
 
-from django.contrib import messages
-from django.db.models import ProtectedError
 
 def manage_categories(request):
     categories = Category.objects.all()
