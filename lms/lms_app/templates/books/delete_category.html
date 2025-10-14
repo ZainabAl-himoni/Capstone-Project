@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Categories</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h1 { margin-bottom: 20px; }
+        .category-list { margin-bottom: 20px; }
+        .category-item { margin: 5px 0; }
+        button { padding: 8px 12px; background-color: #f44336; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #d32f2f; }
+    </style>
+</head>
+<body>
+
+<h1>Manage Categories</h1>
+
+<form method="POST" action="{% url 'delete_categories' %}">
+    {% csrf_token %}
+    <div class="category-list">
+        {% for category in categories %}
+            <div class="category-item">
+                <label>
+                    <input type="checkbox" name="delete_ids" value="{{ category.id }}">
+                    {{ category.name }}
+                </label>
+            </div>
+        {% empty %}
+            <p>No categories available.</p>
+        {% endfor %}
+    </div>
+
+    <button type="submit" onclick="return confirm('Are you sure you want to delete selected categories?')">
+        Delete Selected
+    </button>
+</form>
+
+<a href="{% url 'home' %}">Back to Home</a>
+
+</body>
+</html>

@@ -2,11 +2,67 @@
 {% block title %}About - NestBooks Library{% endblock %}
 
 {% block content %}
-<h1>About Our Library</h1>
-<hr>
-<p>
-    Welcome to our Library Management System 📚<br>
-    This project was developed by <strong>Zainab Al-Himoni</strong>.<br>
-    It helps manage books, categories, and track availability easily.
-</p>
+<style>
+    .about-container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 25px;
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        font-family: 'Montserrat', sans-serif;
+        line-height: 1.6;
+        color: #333;
+    }
+
+    .about-container h1 {
+        text-align: center;
+        color: #2f9fc4;
+        margin-bottom: 15px;
+    }
+
+    .about-container hr {
+        border: 1px solid #2f9fc4;
+        margin-bottom: 20px;
+    }
+
+    .about-container p {
+        font-size: 16px;
+        text-align: center;
+    }
+
+    .btn-back {
+        display: block;
+        margin: 30px auto 0;
+        padding: 10px 20px;
+        border-radius: 10px;
+        background-color: #ff9800;
+        color: white;
+        font-weight: bold;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+
+    .btn-back:hover {
+        background-color: #e68900;
+        transform: scale(1.05);
+    }
+
+    body.dark-mode .about-container {
+        background-color: #1e1e1e;
+        color: #f4f4f9;
+    }
+</style>
+
+<div class="about-container">
+    <h1>About Our Library</h1>
+    <hr>
+    <p>
+        Welcome to our Library Management System 📚<br>
+        This project was developed by <strong>Zainab Al-Himoni</strong>.<br>
+        It helps manage books, categories, and track availability easily.
+    </p>
+    <a href="{% url 'home' %}" class="btn-back">🏠 Back to Home</a>
+</div>
 {% endblock %}

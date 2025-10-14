@@ -23,34 +23,11 @@ body.dark-mode {
     color: #f4f4f9;
 }
 
-body.dark-mode .book-card {
-    background-color: #1e1e1e;
-    color: inherit;
-}
-
-body.dark-mode .sidebar {
-    background-color: #1e1e1e;
-    color: inherit;
-}
-
-body.dark-mode .category ul li {
-    background-color: #2a2a2a;
-}
-
-body.dark-mode .category ul li:hover {
-    background-color: #333;
-}
-
-body.dark-mode footer {
-    background-color: #1a1a1a;
-    color: #f4f4f9;
-}
-
-
+/* ============ HEADER ============ */
 header {
-    background-color: #3B6E7F;
+    background-color: #2f9fc4;
     color: white;
-    padding: 15px 40px;
+    padding: 8px 25px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -58,36 +35,34 @@ header {
     flex-wrap: wrap;
 }
 
-
 header h2 {
     display: flex;
     align-items: center;
-    gap: 0;
-    font-size: 22px;
+    gap: 5px;
+    font-size: 18px;
     font-family: 'Montserrat', sans-serif;
-    font-weight: 300; 
-    color: #f4de64; 
+    font-weight: 300;
+    color: #fffefb;
 }
 
 header img.logo {
-    width: 40px;
-    height: 50px;
+    width: 32px;
+    height: 40px;
 }
 
 nav ul {
     list-style: none;
     display: flex;
-    gap: 25px;
+    gap: 20px;
     flex-wrap: wrap;
 }
 
-
 nav ul li a {
-    color: #FFD700;
+    color: #fffefb;
     font-family: 'Montserrat', sans-serif;
-    font-weight: 300; 
+    font-weight: 300;
     text-decoration: none;
-    font-size: 15px;
+    font-size: 14px;
     transition: color 0.3s;
 }
 
@@ -95,16 +70,23 @@ nav ul li a:hover {
     color: #fff;
 }
 
+/* تجميع أزرار Dark Mode و Logout */
+header .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* زر Dark Mode */
 .dark-mode-toggle {
     cursor: pointer;
     background-color: transparent;
     border: 1px solid white;
     border-radius: 6px;
     color: white;
-    padding: 5px 10px;
-    font-size: 14px;
+    padding: 4px 10px;
+    font-size: 13px;
     transition: all 0.3s;
-    margin-top: 10px;
 }
 
 .dark-mode-toggle:hover {
@@ -112,7 +94,92 @@ nav ul li a:hover {
     color: #0fadc9ff;
 }
 
+/* زر Logout */
+.logout-btn {
+    cursor: pointer;
+    background-color: transparent;
+    border: 1px solid white;
+    border-radius: 8px;
+    color: rgb(236, 203, 39);
+    padding: 5px 14px;
+    font-size: 13px;
+    font-weight: bold;
+    transition: all 0.3s;
+}
 
+.logout-btn:hover,
+.logout-btn:active {
+    background-color: white;
+    color: #2f9fc4;
+    transform: scale(1.05);
+}
+
+body.dark-mode .logout-btn {
+    color: white;
+    border: 1px solid white;
+}
+
+body.dark-mode .logout-btn:hover,
+body.dark-mode .logout-btn:active {
+    background-color: white;
+    color: #121212;
+}
+
+/* ============ BUTTONS (حواف ملونة) ============ */
+.btn-custom {
+    display: inline-block;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    margin-top: 5px;
+    cursor: pointer;
+    background-color: transparent;
+    color: inherit;
+    border: 2px solid;
+}
+
+/* ألوان الحواف */
+.btn-custom.green {
+    border-color: #28a745;
+    color: #28a745;
+}
+
+.btn-custom.green:hover {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-custom.orange {
+    border-color: #fd7e14;
+    color: #fd7e14;
+}
+
+.btn-custom.orange:hover {
+    background-color: #fd7e14;
+    color: white;
+}
+
+.btn-custom.red {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.btn-custom.red:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* أزرار صغيرة للـ Edit/Delete داخل البطاقات */
+.btn-sm {
+    padding: 4px 10px;
+    font-size: 12px;
+    border-radius: 8px;
+}
+
+/* ============ CONTENT ============ */
 main {
     flex: 1;
 }
@@ -120,7 +187,7 @@ main {
 h1 {
     text-align: center;
     font-family: 'Montserrat', sans-serif;
-    margin: 30px 0;
+    margin: 25px 0;
     color: inherit;
 }
 
@@ -136,37 +203,38 @@ h1 {
     min-width: 280px;
 }
 
+/* ============ BOOKS ============ */
 .books-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
 }
 
 .book-card {
     background-color: #fff;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    padding: 10px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    padding: 8px;
     display: flex;
     flex-direction: column;
     transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s, color 0.3s;
 }
 
 .book-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    transform: scale(1.04);
+    box-shadow: 0 5px 12px rgba(0,0,0,0.2);
 }
 
 .book-card img {
     width: 100%;
-    height: 150px;
+    height: 130px;
     object-fit: cover;
     border-radius: 6px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
 .book-title {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: bold;
     margin: 2px 0;
     color: inherit;
@@ -175,29 +243,62 @@ h1 {
 .book-author,
 .book-price,
 .book-status {
-    font-size: 12px;
+    font-size: 11px;
     color: inherit;
     margin: 2px 0;
 }
 
 .book-rating {
-    color: rgb(229, 137, 31); 
-    font-size: 12px;
-    margin-bottom: 4px;
+    color: rgb(229, 137, 31);
+    font-size: 11px;
+    margin-bottom: 3px;
+}
+
+/* أزرار Edit/Delete داخل البطاقات */
+/* أزرار Edit/Delete داخل بطاقة الكتاب - نص فقط بدون حواف */
+.book-actions a {
+    text-decoration: none; /* إزالة الخط السفلي */
+    font-weight: bold;
+    padding: 0; /* لا مساحة داخلية */
+    border: none; /* لا حواف */
+    background: none; /* لا خلفية */
+    cursor: pointer;
+    transition: color 0.3s;
+    font-size: 13px;
+}
+
+/* زر Edit أخضر */
+/* زر Edit برتقالي لامع */
+.book-actions a.edit {
+    color: #ff9800; /* برتقالي أوضح */
+}
+
+.book-actions a.edit:hover {
+    color: #e68900; /* أغمق قليلاً عند التمرير */
 }
 
 
+/* زر Delete أحمر */
+.book-actions a.delete {
+    color: #dc3545;
+}
+
+.book-actions a.delete:hover {
+    color: #a71d2a;
+}
+
+/* ============ SIDEBAR ============ */
 .sidebar {
     flex: 1;
     background-color: #fff;
     border-radius: 10px;
-    padding: 15px;
+    padding: 12px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     height: fit-content;
     position: sticky;
     top: 20px;
     transition: background-color 0.3s, color 0.3s;
-    min-width: 250px;
+    min-width: 230px;
 }
 
 .sidebar h3 {
@@ -205,40 +306,36 @@ h1 {
     color: inherit;
     border-bottom: 2px solid #3B6E7F;
     font-family: 'Montserrat', sans-serif;
-    padding-bottom: 5px;
-    margin-bottom: 15px;
+    padding-bottom: 4px;
+    margin-bottom: 12px;
 }
 
 .category {
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .category strong {
     display: block;
-    background-color: #3B6E7F;
+    background-color: #2f9fc4;
     color: #fff;
-    padding: 8px 10px;
+    padding: 6px 8px;
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.3s;
-}
-
-.category strong:hover {
-    background-color: #3B6E7F;
 }
 
 .category ul {
     list-style-type: none;
     padding-left: 0;
     margin-top: 5px;
-    max-height: 150px;
+    max-height: 140px;
     overflow-y: auto;
 }
 
 .category ul li {
     background-color: #f4f4f9;
     margin: 3px 0;
-    padding: 5px 8px;
+    padding: 4px 7px;
     border-radius: 5px;
     transition: background-color 0.2s;
 }
@@ -247,13 +344,9 @@ h1 {
     background-color: #e6e6f0;
 }
 
-
+/* ============ DARK MODE ============ */
+body.dark-mode .book-card,
 body.dark-mode .sidebar {
-    background-color: #1e1e1e;
-    color: #f4f4f9;
-}
-
-body.dark-mode .book-card {
     background-color: #1e1e1e;
     color: #f4f4f9;
 }
@@ -267,13 +360,13 @@ body.dark-mode .category ul li:hover {
     background-color: #333;
 }
 
-
+/* ============ FOOTER ============ */
 footer {
-    background-color: #3B6E7F;
+    background-color: #2f9fc4;
     color: white;
     text-align: center;
-    padding: 12px;
-    font-size: 14px;
+    padding: 10px;
+    font-size: 13px;
     margin-top: auto;
     transition: background-color 0.3s, color 0.3s;
 }
@@ -283,7 +376,7 @@ body.dark-mode footer {
     color: #f4f4f9;
 }
 
-
+/* ============ RESPONSIVE ============ */
 @media (max-width: 1024px) {
     .container {
         flex-direction: column;
@@ -298,7 +391,7 @@ body.dark-mode footer {
 
 @media (max-width: 768px) {
     header {
-        padding: 15px 20px;
+        padding: 10px 15px;
     }
 
     nav ul {
@@ -306,42 +399,28 @@ body.dark-mode footer {
         justify-content: center;
     }
 
-    .dark-mode-toggle {
-        margin-top: 10px;
-    }
-
     .books-container {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    }
-
-    .sidebar {
-        padding: 10px;
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
     }
 }
 
 @media (max-width: 480px) {
     header h2 {
-        font-size: 18px;
-    }
-
-    nav ul {
-        flex-direction: column;
-        gap: 8px;
-        align-items: center;
+        font-size: 16px;
     }
 
     .book-card img {
-        height: 120px;
+        height: 110px;
     }
 
     .book-title {
-        font-size: 13px;
+        font-size: 12px;
     }
 
     .book-author,
     .book-price,
     .book-status,
     .book-rating {
-        font-size: 11px;
+        font-size: 10px;
     }
 }

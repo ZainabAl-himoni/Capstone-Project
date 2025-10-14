@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+{% block title %}Manage Categories{% endblock %}
+
+{% block content %}
+<style>
+/* ====== حاوية الصفحة ====== */
+.manage-container {
+    display: flex;
+    gap: 30px;
+    margin: 40px auto;
+    padding: 20px;
+    max-width: 1000px;
+    flex-wrap: wrap;
+}
+
+/* ====== القائمة (اليسار) ====== */
+.category-list {
+    flex: 1;
+    min-width: 250px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    padding: 15px;
+    height: fit-content;
+}
+
+.category-list h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    border-bottom: 2px solid #2f9fc4;
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+    color: #2f9fc4;
+}
+
+.category-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.category-list li {
+    background-color: #f7f9fb;
+    margin: 6px 0;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: background-color 0.3s, transform 0.2s;
+    cursor: pointer;
+}
+
+.category-list li:hover {
+    background-color: #e6f5fa;
+    transform: scale(1.02);
+}
+
+/* ====== الفورم (اليمين) ====== */
+.category-form {
+    flex: 2;
+    min-width: 350px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    padding: 25px;
+}
+
+.category-form h2 {
+    text-align: center;
+    color: #2f9fc4;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 22px;
+    margin-bottom: 25px;
+}
+
+.category-form table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.category-form th, 
+.category-form td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.category-form tr:hover {
+    background-color: #f5faff;
+}
+
+.category-form input[type="text"] {
+    width: 90%;
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.category-form input[type="text"]:focus {
+    border-color: #2f9fc4;
+    outline: none;
+}
+
+/* ====== الأزرار ====== */
+.button-group {
+    text-align: center;
+    margin-top: 25px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.btn:hover { transform: scale(1.05); }
+.btn-green { background-color: #28a745; }
+.btn-green:hover { background-color: #218838; }
+.btn-blue { background-color: #2196F3; }
+.btn-blue:hover { background-color: #1976D2; }
+.btn-red { background-color: #f44336; }
+.btn-red:hover { background-color: #c62828; }
+.btn-orange { background-color: #ff9800; }
+.btn-orange:hover { background-color: #e68900; }
+
+/* ====== الوضع الليلي ====== */
+body.dark-mode .category-list,
+body.dark-mode .category-form {
+    background-color: #1e1e1e;
+    color: #f4f4f9;
+}
+
+body.dark-mode .category-list li {
+    background-color: #2a2a2a;
+}
+
+body.dark-mode .category-list li:hover {
+    background-color: #333;
+}
+</style>
+
+<div class="manage-container">
+
+    <!-- ====== القائمة على اليسار ====== -->
+    <div class="category-list">
+        <h3>All Categories</h3>
+        <ul>
+            {% for category in categories %}
+                <li>{{ category.name }}</li>
+            {% empty %}
+                <li>No categories yet</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- ====== الفورم والأزرار على اليمين ====== -->
+    <div class="category-form">
+        <h2>Manage Categories</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <!-- ✅ الرسائل الجديدة مع أسماء الفئات المحمية -->
+            {% if messages %}
+              {% for message in messages %}
+                <div style="padding:10px; border-radius:8px; margin-bottom:10px;
+                            background-color:{% if message.tags == 'error' %}#ffdddd{% else %}#ddffdd{% endif %};
+                            color:{% if message.tags == 'error' %}#a00{% else %}#060{% endif %};">
+                    {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+
+            <table>
+                <tr>
+                    <th></th>
+                    <th>Category Name</th>
+                </tr>
+                {% for category in categories %}
+                <tr>
+                    <td><input type="checkbox" name="delete_ids" value="{{ category.id }}"></td>
+                    <td>
+                        <input type="text" name="name_{{ category.id }}" value="{{ category.name }}">
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            <div class="button-group">
+                <a href="{% url 'add_category' %}">
+                    <button type="button" class="btn btn-green">+ Add</button>
+                </a>
+
+                <button type="submit" name="save_changes" class="btn btn-blue">💾 Save</button>
+
+                <button type="submit" name="delete_selected" onclick="return confirm('Are you sure you want to delete selected categories?')" class="btn btn-red">🗑️ Delete</button>
+
+                <a href="{% url 'home' %}">
+                    <button type="button" class="btn btn-orange">🏠 Back to Home</button>
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

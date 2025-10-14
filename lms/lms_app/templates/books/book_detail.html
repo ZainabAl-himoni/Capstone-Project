@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ book.title }} - Details{% endblock %}
+
+{% block content %}
+<br>
+<h1>Book Details</h1>
+
+<div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+
+    {% if book.photo_book %}
+        <img src="{{ book.photo_book.url }}" alt="{{ book.title }}" style="width:100%; max-height:300px; object-fit:contain; margin-bottom:15px;">
+    {% else %}
+        <img src="https://via.placeholder.com/300x300" alt="No Image" style="width:100%; max-height:300px; object-fit:contain; margin-bottom:15px;">
+    {% endif %}
+
+    <h2 style="margin-bottom:10px;">{{ book.title }}</h2>
+
+    <p>
+        Rating: 
+        {% for i in "★★★★★" %}
+            {% if forloop.counter <= book.rating %}
+                ★
+            {% else %}
+                ☆
+            {% endif %}
+        {% endfor %}
+    </p>
+
+    <p><strong>Author:</strong> {{ book.author }}</p>
+
+    <p><strong>Price:</strong> ${{ book.price }}</p>
+
+
+    <p><strong>Status:</strong> {{ book.status }}</p>
+
+    <p><strong>Description:</strong></p>
+    <p>{{ book.description }}</p>
+
+    <div style="margin-top:20px; display:flex; gap:10px; flex-wrap: wrap;">
+        <a href="{% url 'edit_book' book.id %}" class="btn btn-custom green">Edit</a>
+        <a href="{% url 'delete_book' book.id %}" class="btn btn-custom red">Delete</a>
+        <a href="{% url 'home' %}" class="btn btn-custom orange">Back to Home</a>
+    </div>
+
+</div>
+{% endblock %}

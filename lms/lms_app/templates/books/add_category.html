@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Category - NestBooks{% endblock %}
+
+{% block content %}
+<style>
+.add-container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 25px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.add-container h2 {
+    text-align: center;
+    color: #2f9fc4;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 22px;
+    margin-bottom: 25px;
+}
+
+.add-container label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.add-container input[type="text"] {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.add-container input[type="text"]:focus {
+    border-color: #2f9fc4;
+    outline: none;
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    transition: all 0.3s;
+    text-decoration: none;  
+    display: inline-block;
+}
+
+.btn:hover { transform: scale(1.05); }
+.btn-green { background-color: #28a745; }
+.btn-green:hover { background-color: #218838; }
+.btn-orange { background-color: #ff9800; }
+.btn-orange:hover { background-color: #e68900; }
+
+body.dark-mode .add-container {
+    background-color: #1e1e1e;
+    color: #f4f4f9;
+}
+
+body.dark-mode .add-container input[type="text"] {
+    background-color: #2a2a2a;
+    color: #f4f4f9;
+    border: 1px solid #555;
+}
+
+</style>
+
+<div class="add-container">
+    <h2>Add New Category</h2>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div style="padding:10px; border-radius:8px; margin-bottom:10px;
+                    background-color:{% if message.tags == 'error' %}#ffdddd{% else %}#ddffdd{% endif %};
+                    color:{% if message.tags == 'error' %}#a00{% else %}#060{% endif %};">
+            {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <label for="name">Category Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <div class="button-group">
+            <button type="submit" class="btn btn-green">Save 💾</button>
+            <a href="{% url 'manage_categories' %}" class="btn btn-orange">🏠 Back</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

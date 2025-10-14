@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Book - NestBooks{% endblock %}
+
+{% block content %}
+<style>
+
+.manage-container {
+    display: flex;
+    justify-content: center;
+    margin: 40px auto;
+    padding: 20px;
+    max-width: 600px;
+}
+
+.book-form {
+    width: 100%;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    padding: 25px;
+}
+
+.book-form h2 {
+    text-align: center;
+    color: #2f9fc4;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 22px;
+    margin-bottom: 25px;
+}
+
+.book-form input[type="text"],
+.book-form input[type="number"],
+.book-form input[type="file"],
+.book-form select,
+.book-form textarea {
+    width: 100%;
+    padding: 8px 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.book-form input:focus,
+.book-form select:focus,
+.book-form textarea:focus {
+    border-color: #2f9fc4;
+    outline: none;
+}
+
+.button-group {
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn:hover { transform: scale(1.05); }
+.btn-green { background-color: #28a745; }
+.btn-green:hover { background-color: #218838; }
+.btn-orange { background-color: #ff9800; }
+.btn-orange:hover { background-color: #e68900; }
+
+body.dark-mode .book-form {
+    background-color: #1e1e1e;
+    color: #f4f4f9;
+}
+
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+    background-color: #2a2a2a;
+    color: #f4f4f9;
+    border-color: #555;
+}
+</style>
+
+<div class="manage-container">
+    <div class="book-form">
+        <h2>Add New Book</h2>
+
+        {% if messages %}
+          {% for message in messages %}
+            <div style="padding:10px; border-radius:8px; margin-bottom:10px;
+                        background-color:{% if message.tags == 'error' %}#ffdddd{% else %}#ddffdd{% endif %};
+                        color:{% if message.tags == 'error' %}#a00{% else %}#060{% endif %};">
+                {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <div class="button-group">
+                <button type="submit" class="btn btn-green">Save 💾</button>
+                <a href="{% url 'home' %}" class="btn btn-orange">🏠 Back</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirm Delete - NestBooks{% endblock %}
+
+{% block content %}
+<style>
+.manage-container {
+    display: flex;
+    justify-content: center;
+    margin: 40px auto;
+    padding: 20px;
+    max-width: 600px;
+}
+
+.book-form {
+    width: 100%;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    padding: 25px;
+    text-align: center;
+}
+
+.book-form h2 {
+    color: #2f9fc4;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+.book-form p {
+    font-size: 16px;
+    margin-bottom: 25px;
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn:hover { transform: scale(1.05); }
+.btn-danger { background-color: #f44336; }
+.btn-danger:hover { background-color: #c62828; }
+.btn-secondary { background-color: #6c757d; }
+.btn-secondary:hover { background-color: #5a6268; }
+
+body.dark-mode .book-form {
+    background-color: #1e1e1e;
+    color: #f4f4f9;
+}
+
+body.dark-mode .btn-secondary,
+body.dark-mode .btn-danger {
+    opacity: 0.9;
+}
+</style>
+
+<div class="manage-container">
+    <div class="book-form">
+        <h2>Confirm Delete</h2>
+
+        <p>Are you sure you want to delete the book: <strong>{{ book.title }}</strong>?</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="button-group">
+                <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                <a href="{% url 'home' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
