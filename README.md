@@ -43,6 +43,8 @@ password (CharField)
 │
 ├── Category
 │ ├── name (CharField)
+│ └── created_by (ForeignKey → User)
+
 │
 └── Book
   ├── title (CharField)
@@ -52,9 +54,10 @@ password (CharField)
   ├── price (DecimalField)
   ├── rental_price_day (DecimalField)
   ├── status (ChoiceField – Available / Rental / Sold)
-  ├── category (ForeignKey to Category)
+  ├── category (ForeignKey → Category)
   ├── rating (FloatField)
-  └── description (TextField)
+  ├── description (TextField)
+  └── created_by (ForeignKey → User)
 ```
 
 **🔗 Relationships:**
