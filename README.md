@@ -32,32 +32,28 @@ The system focuses on CRUD (Create, Read, Update, Delete) operations through Dja
 
 ---
 
-### 🧱 Data Model (ERD)
+### 🧱 **Data Model (ERD)**
 
-```mermaid
-erDiagram
-    USER {
-        string username
-        string password
-    }
-    CATEGORY {
-        string name
-    }
-    BOOK {
-        string title
-        string author
-        string photo_book
-        int pages
-        decimal price
-        decimal rental_price_day
-        string status
-        float rating
-        string description
-    }
+**User (Admin)**
 
-    USER ||--o{ CATEGORY : manages
-    CATEGORY ||--o{ BOOK : contains
+* username *(CharField)*
+* password *(CharField)*
 
+│
+├── **Category**
+│   ├── name *(CharField)*
+│
+└── **Book**
+  ├── title *(CharField)*
+  ├── author *(CharField)*
+  ├── photo_book *(ImageField)*
+  ├── pages *(IntegerField)*
+  ├── price *(DecimalField)*
+  ├── rental_price_day *(DecimalField)*
+  ├── status *(ChoiceField – Available / Rental / Sold)*
+  ├── category *(ForeignKey to Category)*
+  ├── rating *(FloatField)*
+  └── description *(TextField)*
 
 **🔗 Relationships:**
 
