@@ -34,37 +34,28 @@ The system focuses on CRUD (Create, Read, Update, Delete) operations through Dja
 
 ### 🧱 Data Model (ERD) - Vertical Layout
 
-```+----------------+
-| User/Admin |
-+----------------+
-| username |
-| password |
-+----------------+
-|
-| 1
-v
-+----------------+
-| Category |
-+----------------+
-| name |
-+----------------+
-|
-| 1
-v
-+------------------------------+
-| Book |
-+------------------------------+
-| title |
-| author |
-| photo_book |
-| pages |
-| price |
-| rental_price_day |
-| status (Available/Rental/Sold)|
-| category (FK to Category) |
-| rating |
-| description |
-+------------------------------+```
+```User (Admin)
+
+username (CharField)
+
+password (CharField)
+
+│
+├── Category
+│ ├── name (CharField)
+│
+└── Book
+  ├── title (CharField)
+  ├── author (CharField)
+  ├── photo_book (ImageField)
+  ├── pages (IntegerField)
+  ├── price (DecimalField)
+  ├── rental_price_day (DecimalField)
+  ├── status (ChoiceField – Available / Rental / Sold)
+  ├── category (ForeignKey to Category)
+  ├── rating (FloatField)
+  └── description (TextField)
+```
 
 **🔗 Relationships:**
 
