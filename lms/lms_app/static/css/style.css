@@ -408,3 +408,66 @@ body.dark-mode footer {
         font-size: 10px;
     }
 }
+
+@media (max-width: 768px) {
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        gap: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .main-books {
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    .main-books > *:last-child {
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    .sidebar {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+
+    .sidebar h3 {
+        margin: 8px 0 !important;
+    }
+
+    .chart-container {
+        margin: 0 !important;
+        padding: 0 !important;
+        height: auto !important;
+    }
+
+    #booksPieChart {
+        margin: 0 auto !important;
+        padding: 0 !important;
+        display: block;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        gap: 0 !important;
+    }
+
+    .sidebar {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+
+    .chart-container {
+        margin: 0 !important;
+    }
+
+    .sidebar h3 {
+        margin: 5px 0 !important;
+    }
+}
+

@@ -62,7 +62,7 @@ def register(request):
     
     return render(request, 'register.html')
 
-from .forms import BookForm  
+
 
 def add_book(request):
     if request.method == "POST":
@@ -101,27 +101,35 @@ def delete_book(request, id):
     return render(request, 'books/delete_book.html', {'book': book})
 
 
+
+
 def add_category(request):
-    next_url = request.GET.get('next', '/home/')
-    # أضف anchor للـ Category
-    if not next_url.endswith('#id_category'):
-        if '#' in next_url:
-            next_url = next_url.split('#')[0] + '#id_category'
-        else:
-            next_url += '#id_category'
+    back_url = '/home/'
+
+    next_url = request.GET.get('next')
 
     if request.method == 'POST':
         name = request.POST.get('name', '').strip()
+
         if name:
             if Category.objects.filter(name__iexact=name).exists():
                 messages.error(request, "Category already exists.")
             else:
                 Category.objects.create(name=name)
-                messages.success(request, "Category added successfully!✅")
-                return redirect(next_url)  # إعادة التوجيه مع anchor
+                messages.success(request, "Category added successfully! ✅")
+
+                if next_url:
+                    return redirect(next_url)
+                
+                return redirect('manage_categories')
+
         else:
             messages.error(request, "Please enter a category name.")
-    return render(request, 'books/add_category.html')
+
+    return render(request, 'books/add_category.html', {'back_url': back_url})
+
+
+
 
 def edit_category(request, id):
     category = get_object_or_404(Category, id=id)

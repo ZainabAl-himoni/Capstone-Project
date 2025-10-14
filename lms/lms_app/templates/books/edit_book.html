@@ -1,16 +1,15 @@
 {% extends 'base.html' %}
 
-{% block title %}Add Book - NestBooks{% endblock %}
+{% block title %}Edit Book - NestBooks{% endblock %}
 
 {% block content %}
 <style>
-
 .manage-container {
     display: flex;
     justify-content: center;
     margin: 40px auto;
     padding: 20px;
-    max-width: 600px;
+    max-width: 700px;
 }
 
 .book-form {
@@ -19,6 +18,7 @@
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     padding: 25px;
+    box-sizing: border-box;
 }
 
 .book-form h2 {
@@ -29,23 +29,33 @@
     margin-bottom: 25px;
 }
 
-.book-form input[type="text"],
-.book-form input[type="number"],
-.book-form input[type="file"],
-.book-form select,
-.book-form textarea {
-    width: 100%;
-    padding: 8px 12px;
+/* Inline form rows */
+.form-row {
+    display: flex;
+    align-items: center;
     margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.form-row label {
+    width: 120px; /* ثابت للـ label */
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.form-row input,
+.form-row select,
+.form-row textarea {
+    flex: 1;
+    padding: 8px 12px;
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 14px;
-    transition: border-color 0.3s;
 }
 
-.book-form input:focus,
-.book-form select:focus,
-.book-form textarea:focus {
+.form-row input:focus,
+.form-row select:focus,
+.form-row textarea:focus {
     border-color: #2f9fc4;
     outline: none;
 }
@@ -68,6 +78,7 @@
     transition: all 0.3s;
     text-decoration: none;
     display: inline-block;
+    min-width: 120px;
 }
 
 .btn:hover { transform: scale(1.05); }
@@ -88,11 +99,23 @@ body.dark-mode textarea {
     color: #f4f4f9;
     border-color: #555;
 }
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .form-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .form-row label {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+}
 </style>
 
 <div class="manage-container">
     <div class="book-form">
-        <h2>Add New Book</h2>
+        <h2>Edit Book</h2>
 
         {% if messages %}
           {% for message in messages %}
@@ -106,10 +129,34 @@ body.dark-mode textarea {
 
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ form.as_p }}
+
+            <div class="form-row">
+                <label for="{{ form.title.id_for_label }}">Title:</label>
+                {{ form.title }}
+            </div>
+
+            <div class="form-row">
+                <label for="{{ form.author.id_for_label }}">Author:</label>
+                {{ form.author }}
+            </div>
+
+            <div class="form-row">
+                <label for="{{ form.category.id_for_label }}">Category:</label>
+                {{ form.category }}
+            </div>
+
+            <div class="form-row">
+                <label for="{{ form.price.id_for_label }}">Price:</label>
+                {{ form.price }}
+            </div>
+
+            <div class="form-row">
+                <label for="{{ form.cover.id_for_label }}">Cover:</label>
+                {{ form.cover }}
+            </div>
 
             <div class="button-group">
-                <button type="submit" class="btn btn-green">Save 💾</button>
+                <button type="submit" class="btn btn-green">Update 💾</button>
                 <a href="{% url 'home' %}" class="btn btn-orange">🏠 Back</a>
             </div>
         </form>
