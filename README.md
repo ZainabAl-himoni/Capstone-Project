@@ -42,7 +42,6 @@ The system focuses on CRUD (Create, Read, Update, Delete) operations through Dja
 +----------------+
 |
 | 1
-|
 v
 +----------------+
 | Category |
@@ -51,7 +50,6 @@ v
 +----------------+
 |
 | 1
-|
 v
 +------------------------------+
 | Book |
