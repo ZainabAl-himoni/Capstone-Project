@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   
 </head>
 <body>
 
@@ -17,19 +18,19 @@
     </h2>
     <nav>
         <ul>
-            <li><a href="{% url 'home' %}">Home</a></li>
-            <li><a href="{% url 'about' %}">About</a></li>
-            <li><a href="{% url 'manage_categories' %}">Categories</a></li>
+            <li><a href="{% url 'home' %}"><span class="text">Home</span> <span class="icon">🏠</span></a></li>
+            <li><a href="{% url 'about' %}"><span class="text">About</span> <span class="icon">ℹ️</span></a></li>
+            <li><a href="{% url 'manage_categories' %}"><span class="text">Categories</span> <span class="icon">📚</span></a></li>
         </ul>
     </nav>
     <div class="header-actions">
+        <button class="toggle-icons">🔀</button>
         <button class="dark-mode-toggle">🌙</button>
         {% if user.is_authenticated %}
             <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
         {% endif %}
     </div>
 </header>
-
 
 <main>
 {% block content %}
@@ -45,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const toggle = document.querySelector('.dark-mode-toggle');
     const body = document.body;
 
+    // Dark Mode
     if(localStorage.getItem('darkMode') === 'enabled'){
         body.classList.add('dark-mode');
         toggle.textContent = '☀️';
@@ -67,6 +69,25 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Icon toggle
+    const iconToggle = document.querySelector('.toggle-icons');
+    const nav = document.querySelector('nav');
+
+    if(localStorage.getItem('iconMode') === 'enabled'){
+        nav.classList.add('icon-mode');
+    }
+
+    iconToggle.addEventListener('click', () => {
+        nav.classList.toggle('icon-mode');
+
+        if(nav.classList.contains('icon-mode')){
+            localStorage.setItem('iconMode','enabled');
+        } else {
+            localStorage.setItem('iconMode','disabled');
+        }
+    });
+
+    // Chart
     {% if chart_labels and chart_data %}
     const ctx = document.getElementById('booksPieChart');
     if(ctx){

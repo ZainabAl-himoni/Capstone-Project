@@ -121,6 +121,52 @@ body.dark-mode .logout-btn:active {
     color: #121212;
 }
 
+.toggle-icons {
+    cursor: pointer;
+    background-color: transparent;
+    border: 1px solid white;
+    border-radius: 8px;
+    color: rgb(236, 203, 39);
+    padding: 5px 14px;
+    font-size: 13px;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.toggle-icons:hover,
+.toggle-icons:active {
+    background-color: white;
+    color: #2f9fc4;
+    transform: scale(1.05);
+}
+
+body.dark-mode .toggle-icons {
+    color: white;
+    border: 1px solid white;
+}
+
+body.dark-mode .toggle-icons:hover,
+body.dark-mode .toggle-icons:active {
+    background-color: white;
+    color: #121212;
+}
+  nav ul li a {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+        nav ul li a .icon {
+            display: none;
+            font-size: 16px;
+        }
+        nav.icon-mode ul li a span.text {
+            display: none;
+        }
+        nav.icon-mode ul li a .icon {
+            display: inline;
+        }
+
 .btn-custom {
     display: inline-block;
     padding: 8px 16px;
