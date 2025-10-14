@@ -37,13 +37,13 @@ The system focuses on CRUD (Create, Read, Update, Delete) operations through Dja
 ```
 ├── User (Admin)
 │  ├── username (CharField)
-│  ├── password (CharField)
+│  └──  password (CharField)
 │
 │
 ├── Category
 │ ├── name (CharField)
 │ └── created_by (ForeignKey → User)
-
+│
 │
 └── Book
   ├── title (CharField)
