@@ -34,7 +34,8 @@ The system focuses on CRUD (Create, Read, Update, Delete) operations through Dja
 
 ### 🧱 Data Model (ERD) - Vertical Layout
 
-```User (Admin)
+```
+User (Admin)
 
 username (CharField)
 
