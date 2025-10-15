@@ -143,6 +143,15 @@ body.dark-mode .category-list li {
 body.dark-mode .category-list li:hover {
     background-color: #333;
 }
+
+.message-box {
+    padding:10px;
+    border-radius:8px;
+    margin-bottom:10px;
+    transition: opacity 0.5s ease;
+}
+.message-success { background-color:#ddffdd; color:#060; }
+.message-error { background-color:#ffdddd; color:#a00; }
 </style>
 
 <div class="manage-container">
@@ -166,9 +175,7 @@ body.dark-mode .category-list li:hover {
 
             {% if messages %}
               {% for message in messages %}
-                <div style="padding:10px; border-radius:8px; margin-bottom:10px;
-                            background-color:{% if message.tags == 'error' %}#ffdddd{% else %}#ddffdd{% endif %};
-                            color:{% if message.tags == 'error' %}#a00{% else %}#060{% endif %};">
+                <div class="message-box {% if message.tags == 'error' %}message-error{% else %}message-success{% endif %}">
                     {{ message }}
                 </div>
               {% endfor %}
@@ -190,16 +197,14 @@ body.dark-mode .category-list li:hover {
             </table>
 
             <div class="button-group">
-           
-           <a href="{% url 'add_category' %}?next={% url 'manage_categories' %}" 
-            class="btn btn-green" 
-             style="text-decoration: none;">+ Add</a>
-
-                
+                <a href="{% url 'add_category' %}?next={% url 'manage_categories' %}" 
+                   class="btn btn-green" style="text-decoration: none;">+ Add</a>
 
                 <button type="submit" name="save_changes" class="btn btn-blue">💾 Save</button>
 
-                <button type="submit" name="delete_selected" onclick="return confirm('Are you sure you want to delete selected categories?')" class="btn btn-red">❎ Delete</button>
+                <button type="submit" name="delete_selected" 
+                        onclick="return confirm('Are you sure you want to delete selected categories?')" 
+                        class="btn btn-red">❎ Delete</button>
 
                 <a href="{% url 'home' %}">
                     <button type="button" class="btn btn-orange">🏠 Back to Home</button>
@@ -208,4 +213,17 @@ body.dark-mode .category-list li:hover {
         </form>
     </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const messages = document.querySelectorAll('.message-box');
+    messages.forEach(msg => {
+        setTimeout(() => {
+            msg.style.opacity = "0";
+            setTimeout(() => msg.remove(), 500);
+        }, 2000); 
+    });
+});
+</script>
+
 {% endblock %}

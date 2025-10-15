@@ -1,13 +1,19 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib import messages
 from .models import Book, Category
 from django.contrib.auth import logout
-from .models import Book
-from django.db.models import ProtectedError
 from .forms import BookForm  
+from django.db.models import ProtectedError
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
+from .forms import BookForm, CommentForm 
+from django.db import models
+from .models import Book, Category, Comment
+from django.shortcuts import get_object_or_404, redirect
+from django.http import HttpResponseForbidden
+from django.http import JsonResponse
 
 def home(request):
     books = Book.objects.all()
@@ -24,15 +30,19 @@ def home(request):
     }
     return render(request, 'home.html', context)
 
+
 def user_logout(request):
     logout(request)
     return redirect('login')
 
+
 def about(request):
     return render(request, 'about.html')
 
+
 def admin_redirect(request):
     return redirect('/admin/')
+
 
 def user_login(request):
     if request.method == "POST":
@@ -47,6 +57,7 @@ def user_login(request):
             messages.error(request, "Username or password is incorrect")
     
     return render(request, 'login.html')
+
 
 def register(request):
     if request.method == "POST":
@@ -63,7 +74,7 @@ def register(request):
     return render(request, 'register.html')
 
 
-
+@login_required
 def add_book(request):
     if request.method == "POST":
         form = BookForm(request.POST, request.FILES)
@@ -74,6 +85,8 @@ def add_book(request):
         form = BookForm()
     return render(request, 'books/add_book.html', {'form': form})
 
+
+@login_required
 def edit_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     if request.method == 'POST':
@@ -92,20 +105,18 @@ def edit_book(request, book_id):
     })
 
 
-
+@login_required
 def delete_book(request, id):
-    book = Book.objects.get(id=id)
+    book = get_object_or_404(Book, id=id)
     if request.method == "POST":
         book.delete()
         return redirect('home')
     return render(request, 'books/delete_book.html', {'book': book})
 
 
-
-
+@login_required
 def add_category(request):
     back_url = '/home/'
-
     next_url = request.GET.get('next')
 
     if request.method == 'POST':
@@ -129,8 +140,7 @@ def add_category(request):
     return render(request, 'books/add_category.html', {'back_url': back_url})
 
 
-
-
+@login_required
 def edit_category(request, id):
     category = get_object_or_404(Category, id=id)
     if request.method == "POST":
@@ -144,6 +154,8 @@ def edit_category(request, id):
             messages.error(request, "Please enter a category name.")
     return render(request, 'books/edit_category.html', {'category': category})
 
+
+@login_required
 def delete_category(request, id):
     category = get_object_or_404(Category, id=id)
     if request.method == "POST":
@@ -154,13 +166,13 @@ def delete_category(request, id):
     return redirect('home')
 
 
-
+@login_required
 def manage_categories(request):
     categories = Category.objects.all()
 
     if request.method == 'POST':
         if 'save_changes' in request.POST:
-            # Save name changes
+           
             for category in categories:
                 new_name = request.POST.get(f'name_{category.id}')
                 if new_name and new_name != category.name:
@@ -173,16 +185,15 @@ def manage_categories(request):
             if ids_to_delete:
                 try:
                     Category.objects.filter(id__in=ids_to_delete).delete()
-                    messages.success(request, "Selected categories deleted successfully 🗑️")
+                    messages.success(request, "Selected categories deleted successfully ❎")
                 except ProtectedError:
-                    # Cannot delete categories linked to books
                     messages.error(request, "Cannot delete some categories because they are linked to existing books 📚")
 
         return redirect('manage_categories')
 
     return render(request, 'books/manage_categories.html', {'categories': categories})
 
-
+@login_required
 def delete_categories(request):
     if request.method == 'POST':
         ids_to_delete = request.POST.getlist('delete_ids')
@@ -191,9 +202,89 @@ def delete_categories(request):
     return redirect('manage_categories')
 
 
+
 def book_detail(request, id):
     book = get_object_or_404(Book, id=id)
-    return render(request, 'books/book_detail.html', {'book': book})
+    comments = Comment.objects.filter(book=book)
+
+    visitor_comments = request.session.get('visitor_comments', [])
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.book = book
+            if request.user.is_authenticated:
+                comment.user = request.user
+            comment.save()
+
+            if not request.user.is_authenticated:
+                visitor_comments.append(comment.id)
+                request.session['visitor_comments'] = visitor_comments
+
+            return redirect('book_detail', id=book.id)
+    else:
+        form = CommentForm()
+
+    context = {
+        'book': book,
+        'comments': comments,
+        'form': form,
+        'visitor_comments': visitor_comments
+    }
+    return render(request, 'books/book_detail.html', context)
+
+
+
+
+@login_required
+def add_book(request):
+    form = BookForm(request.POST or None, request.FILES or None)
+    if form.is_valid():
+        form.save()
+        messages.success(request, "Book added successfully!")
+        return redirect('home')
+    return render(request, 'books/add_book.html', {'form': form})
+
+def delete_comment(request, id):
+    comment = get_object_or_404(Comment, id=id)
+    visitor_comments = request.session.get('visitor_comments', [])
+
+    allowed = (request.user.is_authenticated and comment.user == request.user) or \
+              (not request.user.is_authenticated and comment.id in visitor_comments)
+    if not allowed:
+        return JsonResponse({'success': False, 'error': "You can't delete this comment!"}, status=403)
+
+    if request.method == 'POST':
+        comment.delete()
+        if not request.user.is_authenticated:
+            visitor_comments.remove(id)
+            request.session['visitor_comments'] = visitor_comments
+        return JsonResponse({'success': True})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request.'}, status=400)
+
+
+def edit_comment(request, id):
+    comment = get_object_or_404(Comment, id=id)
+    visitor_comments = request.session.get('visitor_comments', [])
+
+    allowed = (request.user.is_authenticated and comment.user == request.user) or \
+              (not request.user.is_authenticated and comment.id in visitor_comments)
+    if not allowed:
+        return JsonResponse({'success': False, 'error': "You can't edit this comment!"}, status=403)
+
+    if request.method == 'POST':
+        new_text = request.POST.get('text', '').strip()
+        if not new_text:
+            return JsonResponse({'success': False, 'error': 'Comment cannot be empty.'}, status=400)
+        comment.text = new_text
+        comment.save()
+        return JsonResponse({'success': True, 'new_text': comment.text})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request.'}, status=400)
+
+
 
 
 

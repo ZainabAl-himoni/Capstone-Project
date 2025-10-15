@@ -1,5 +1,5 @@
 from django import forms
-from .models import Book
+from .models import Book, Comment  
 
 class BookForm(forms.ModelForm):
     rating = forms.DecimalField(
@@ -9,7 +9,7 @@ class BookForm(forms.ModelForm):
         decimal_places=1, 
         max_digits=3,     
         widget=forms.NumberInput(attrs={
-            'placeholder': 'Enter rating (0-5, e.g. 4.5)',
+            'placeholder': 'Enter rating ( 0 - 5)',
             'step': '0.1',  
         })
     )
@@ -19,3 +19,12 @@ class BookForm(forms.ModelForm):
         fields = ['title', 'author', 'photo_book', 'pages', 'price',
                   'rental_price_day', 'status', 'category', 'rating', 'description']
 
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment  
+        fields = ['name', 'text']
+        widgets = {
+            'text': forms.Textarea(attrs={'placeholder': 'Add your comment here...', 'rows': 3}),
+            'name': forms.TextInput(attrs={'placeholder': 'Your name (optional)'}),
+        }

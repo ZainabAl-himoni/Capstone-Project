@@ -1,13 +1,18 @@
+{% load static %}
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - NestBooks Library</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
     <style>
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Montserrat', sans-serif;
             background: linear-gradient(135deg, #9eccdcff, #a4c3f7ff);
             display: flex;
             justify-content: center;
@@ -19,14 +24,13 @@
             display: flex;
             align-items: center;
             margin-bottom: 40px;
-            margin-left: -20px;
         }
 
         .center-logo img {
             width: 80px; 
             height: 80px;
             object-fit: contain;
-            margin-top: 12px;
+            margin-right: 10px;
         }
 
         .center-logo p {
@@ -34,10 +38,9 @@
             font-weight: bold;
             color: white;
             margin: 0;
-            margin-left: -20px; 
         }
 
-        .login-container {
+        .auth-container {
             background-color: white;
             padding: 40px;
             border-radius: 12px;
@@ -46,7 +49,7 @@
             text-align: center;
         }
 
-        h2 {
+        .auth-container h2 {
             margin-bottom: 25px;
             color: #333;
         }
@@ -55,7 +58,7 @@
             display: block;
             text-align: left;
             margin-bottom: 5px;
-            color: #555555ff;
+            color: #555;
             font-weight: 500;
         }
 
@@ -91,19 +94,19 @@
             margin-top: 15px;
         }
 
-        .register-link {
+        .login-link {
             margin-top: 20px;
             font-size: 14px;
             color: #333;
         }
 
-        .register-link a {
+        .login-link a {
             color: #2890c4ff;
             font-weight: bold;
             text-decoration: none;
         }
 
-        .register-link a:hover {
+        .login-link a:hover {
             text-decoration: underline;
         }
     </style>
@@ -111,13 +114,22 @@
 <body>
 
     <div class="center-logo">
-        <img src="/static/images/log.png" alt="Logo"> 
-        <p>NestBooks</p> 
+        <img src="{% static 'images/log.png' %}" alt="Logo"> 
+        <p>NestBooks</p>
     </div>
 
-    <div class="login-container">
-        <h2>Login</h2>
-        <form method="post">
+    <div class="auth-container">
+        <h2>Create Account</h2>
+
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form method="POST" action="{% url 'register' %}">
             {% csrf_token %}
             <label>Username:</label>
             <input type="text" name="username" required>
@@ -125,21 +137,12 @@
             <label>Password:</label>
             <input type="password" name="password" required>
 
-            <button type="submit">Login</button>
+            <button type="submit">Register</button>
         </form>
 
-        {% if messages %}
-            <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-
-        <!-- ✅ رابط التسجيل الجديد -->
-        <p class="register-link">
-            Don’t have an account? 
-            <a href="{% url 'register' %}">Register here</a>
+        <p class="login-link">
+            Already have an account? 
+            <a href="{% url 'login' %}">Login here</a>
         </p>
     </div>
 

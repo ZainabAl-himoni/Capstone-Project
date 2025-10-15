@@ -59,6 +59,9 @@ The system focuses on CRUD (Create, Read, Update, Delete) operations through Dja
   └── created_by (ForeignKey → User)
 ```
 
+![ERD](pic/ERD.png)
+
+
 **🔗 Relationships:**
 
 * Each **Category** can have many **Books**.

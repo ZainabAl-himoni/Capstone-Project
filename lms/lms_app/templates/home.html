@@ -10,60 +10,55 @@
     border-radius: 8px 8px 0 0; 
 }
 </style>
+
 <h1>Welcome to NestBooks Library</h1>
 
-
 <div style="display: flex; justify-content: space-between; margin-bottom: 30px; flex-wrap: wrap; gap: 30px;">
-
+    {% if user.is_authenticated %}
     <div style="display: flex; align-items: center; justify-content: flex-start; gap: 20px; margin-left: 25px;">
-        
         <a href="{% url 'add_book' %}" class="btn btn-custom green">+ Add Book</a>
     </div>
 
     <div style="display: flex; align-items: center; justify-content: flex-end; gap: 20px; margin-right: 25px;">
-       
         <a href="{% url 'add_category' %}" class="btn btn-custom green">+ Add Category</a>
         <a href="{% url 'manage_categories' %}" class="btn btn-custom orange">✎ Edit Categories</a>
     </div>
-
+    {% endif %}
 </div>
 
-
-
-
 <div class="container">
-
     <div class="main-books">
         <div class="books-container">
             {% for book in books %}
                 <div class="book-card">
-    <a href="{% url 'book_detail' book.id %}" style="text-decoration: none; color: inherit;">
-        {% if book.photo_book %}
-            <img src="{{ book.photo_book.url }}" alt="{{ book.title }}">
-        {% else %}
-            <img src="https://via.placeholder.com/150x150" alt="No Image">
-        {% endif %}
-        <div class="book-title">{{ book.title }}</div>
-        <div class="book-rating">
-            {% for i in "★★★★★" %}
-                {% if forloop.counter <= book.rating %}
-                    ★
-                {% else %}
-                    ☆
-                {% endif %}
-            {% endfor %}
-        </div>
-        <div class="book-author">Author: {{ book.author }}</div>
-        <div class="book-price">Price: ${{ book.price }}</div>
-        <div class="book-status">Status: {{ book.status }}</div>
-    </a>
+                    <a href="{% url 'book_detail' book.id %}" style="text-decoration: none; color: inherit;">
+                        {% if book.photo_book %}
+                            <img src="{{ book.photo_book.url }}" alt="{{ book.title }}">
+                        {% else %}
+                            <img src="https://via.placeholder.com/150x150" alt="No Image">
+                        {% endif %}
+                        <div class="book-title">{{ book.title }}</div>
+                        <div class="book-rating">
+                            {% for i in "★★★★★" %}
+                                {% if forloop.counter <= book.rating %}
+                                    ★
+                                {% else %}
+                                    ☆
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="book-author">Author: {{ book.author }}</div>
+                        <div class="book-price">Price: ${{ book.price }}</div>
+                        <div class="book-status">Status: {{ book.status }}</div>
+                    </a>
 
-    <div class="book-actions mt-2 text-center">
-        <a href="{% url 'edit_book' book.id %}" class="btn btn-custom orange btn-sm">Edit</a>
-        <a href="{% url 'delete_book' book.id %}" class="btn btn-custom red btn-sm">Delete</a>
-    </div>
-</div>
-
+                    {% if user.is_authenticated %}
+                    <div class="book-actions mt-2 text-center">
+                        <a href="{% url 'edit_book' book.id %}" class="btn btn-custom orange btn-sm">Edit</a>
+                        <a href="{% url 'delete_book' book.id %}" class="btn btn-custom red btn-sm">Delete</a>
+                    </div>
+                    {% endif %}
+                </div>
             {% endfor %}
         </div>
     </div>
