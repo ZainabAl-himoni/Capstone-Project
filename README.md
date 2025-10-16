@@ -1,10 +1,12 @@
-## 📚 **Project Title: Library Management System (LMS)**
+## 📚 **Project Title: NestBook **
 
 ### 🧠 **Overview**
 
-The **Library Management System (LMS)** is a Django-based web application designed to manage books within a digital library.
-It allows the **Admin** user to add books with detailed information such as title, author, price, number of pages, status, category, rating, and description — as well as upload book cover images.
-The system focuses on CRUD (Create, Read, Update, Delete) operations through Django’s admin panel and a simple, responsive HTML/CSS interface.
+The **NestBook** :books: Project Title: NestBook – Library Management System App
+:brain: Overview
+NestBook is a web application that allows users to create and manage their personal book collections.
+ Each user can log in, add books with titles, authors, descriptions, and prices, and upload cover images to visualize their library.
+ The app focuses on CRUD functionality, authentication, and a clean, responsive HTML/CSS interface.
 
 ---
 
@@ -34,31 +36,6 @@ The system focuses on CRUD (Create, Read, Update, Delete) operations through Dja
 
 ### 🧱 Data Model (ERD) - Vertical Layout
 
-```
-├── User (Admin)
-│  ├── username (CharField)
-│  └──  password (CharField)
-│
-│
-├── Category
-│ ├── name (CharField)
-│ └── created_by (ForeignKey → User)
-│
-│
-└── Book
-  ├── title (CharField)
-  ├── author (CharField)
-  ├── photo_book (ImageField)
-  ├── pages (IntegerField)
-  ├── price (DecimalField)
-  ├── rental_price_day (DecimalField)
-  ├── status (ChoiceField – Available / Rental / Sold)
-  ├── category (ForeignKey → Category)
-  ├── rating (FloatField)
-  ├── description (TextField)
-  └── created_by (ForeignKey → User)
-```
-
 ![ERD](pic/ERD.png)
 
 
@@ -66,21 +43,28 @@ The system focuses on CRUD (Create, Read, Update, Delete) operations through Dja
 
 * Each **Category** can have many **Books**.
 * Each **Book** belongs to one **Category**.
-* Only one **Admin User** can create many Books.
-* Only one **Admin User** can create many Categories.
-* Only one **Admin User** manages all entities.
+* Only one **User** can create many Books.
+* Only one **User** can create many Categories.
+* Only one **User** manages all entities.
 
 
 ---
 
 ### 🧭 **User Stories**
 
-* As an **Admin**, I can log in to the admin dashboard.
-* As an **Admin**, I can add new books with full details.
-* As an **Admin**, I can add new category.
-* As an **Admin**, I can view all books stored in the system.
-* As an **Admin**, I can edit or delete any book or category.
-* As a **Visitor**, I can browse all books displayed on the public homepage.
+- As a **user**, I can register and log in to my account.  
+- As a **user**, I can add new categories to organize my books.  
+- As a **user**, I can add new books with details such as **title**, **author**, **description**, **price**, **image**, **pages**, **rental price**, and **status**.  
+- As a **user**, I can assign a book to a specific category.  
+- As a **user**, I can view all books  
+- As a **user**, I can edit or delete my own books.  
+- As a **user**, I can edit or delete categories that I created.  
+- As a **user**, I can add, edit, and delete comments on books.  
+
+- As a **visitor**, I can view all books displayed on the public homepage.  
+- As a **visitor**, I can add, edit, and delete my own comments on books.  
+- As a **visitor**, I cannot add, edit, or delete books or categories.  
+
 
 ---
 
@@ -90,8 +74,8 @@ The system focuses on CRUD (Create, Read, Update, Delete) operations through Dja
 | ------------------------------- | -------------------------------------------------------------------------------------------------- |
 | **Home (All Books)**            | Displays all books with cover image, title, and author.                                            |
 | **Book Detail**                 | Shows complete information about a selected book (title, author, price, description, image, etc.). |
-| **Add / Edit Book (Admin)**     | Forms to add or update book information.                                                           |
-| **Category Management (Admin)** | Admin page to manage and create categories.                                                        |
+| **Add / Edit Book**     | Forms to add or update book information.                                                           |
+| **Category Management** | Admin page to manage and create categories.                                                        |
 | **Login / Logout**              | Authentication pages for admin login and logout.                                                   |
 
 ---
@@ -101,9 +85,9 @@ The system focuses on CRUD (Create, Read, Update, Delete) operations through Dja
 | View           | Description                               |
 | -------------- | ----------------------------------------- |
 | **ListView**   | Displays all books on the homepage (`/`). |
-| **CreateView** | Allows adding a new book.                 |
-| **UpdateView** | Allows editing book details.              |
-| **DeleteView** | Allows deleting a book.                   |
+| **CreateView** | Allows adding a new book and category.    |
+| **UpdateView** | Allows editing book details and category. |
+| **DeleteView** | Allows deleting a book and category.      |
 | **DetailView** | Displays details of a single book.        |
 
 ---
@@ -116,28 +100,6 @@ The system focuses on CRUD (Create, Read, Update, Delete) operations through Dja
 | **Day 2 – Admin Panel + CRUD**     | Implement CRUD for Book and Category, secure access to admin only.                     |       |
 | **Day 3 – Templates & Display**    | Create templates for homepage and book details, connect to views.                      |       |
 | **Day 4 – CSS + README + Testing** | Add responsive CSS, finalize README, and test the project.                             |       |
-
----
-
-### 🧮 **Example Query Logic**
-
-Display all books:
-
-```python
-books = Book.objects.all().order_by('title')
-```
-
-Filter books by category:
-
-```python
-books = Book.objects.filter(category__name='Science')
-```
-
-Display only available books:
-
-```python
-books = Book.objects.filter(status='available')
-```
 
 ---
 
@@ -157,8 +119,6 @@ books = Book.objects.filter(status='available')
 | Challenge                           | Solution                                                             |
 | ----------------------------------- | -------------------------------------------------------------------- |
 | Handling image uploads              | Configured `MEDIA_URL` and `MEDIA_ROOT` in settings.py.              |
-| Defining book-category relationship | Used `ForeignKey` with `on_delete=models.PROTECT`.                   |
-| Customizing admin interface         | Changed admin site title to *Library Management System Admin Panel*. |
 | Displaying book images in admin     | Used `list_display` and media configuration to show images properly. |
 
 ---
