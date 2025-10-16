@@ -37,7 +37,7 @@
 }
 
 .form-row label {
-    width: 120px; 
+    width: 120px;
     margin-right: 10px;
     font-weight: bold;
 }
@@ -109,6 +109,23 @@ body.dark-mode textarea {
         margin-bottom: 5px;
     }
 }
+
+#messages-container {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 9999;
+}
+
+.message-box {
+    padding:10px;
+    border-radius:8px;
+    margin-bottom:10px;
+    font-weight: 500;
+}
+
+.message-box.success { background-color: #ddffdd; color: #060; }
+.message-box.error { background-color: #ffdddd; color: #a00; }
 </style>
 
 <div class="manage-container">
@@ -116,42 +133,33 @@ body.dark-mode textarea {
         <h2>Edit Book</h2>
 
         {% if messages %}
-          {% for message in messages %}
-            <div style="padding:10px; border-radius:8px; margin-bottom:10px;
-                        background-color:{% if message.tags == 'error' %}#ffdddd{% else %}#ddffdd{% endif %};
-                        color:{% if message.tags == 'error' %}#a00{% else %}#060{% endif %};">
-                {{ message }}
-            </div>
-          {% endfor %}
+          <div id="messages-container">
+            {% for message in messages %}
+              <div class="message-box {% if message.tags == 'error' %}error{% else %}success{% endif %}">
+                  {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+
+          <script>
+            setTimeout(function() {
+              const container = document.getElementById('messages-container');
+              if (container) {
+                container.style.display = 'none';
+              }
+            }, 2000);
+          </script>
         {% endif %}
 
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
 
-            <div class="form-row">
-                <label for="{{ form.title.id_for_label }}">Title:</label>
-                {{ form.title }}
-            </div>
-
-            <div class="form-row">
-                <label for="{{ form.author.id_for_label }}">Author:</label>
-                {{ form.author }}
-            </div>
-
-            <div class="form-row">
-                <label for="{{ form.category.id_for_label }}">Category:</label>
-                {{ form.category }}
-            </div>
-
-            <div class="form-row">
-                <label for="{{ form.price.id_for_label }}">Price:</label>
-                {{ form.price }}
-            </div>
-
-            <div class="form-row">
-                <label for="{{ form.cover.id_for_label }}">Cover:</label>
-                {{ form.cover }}
-            </div>
+            {% for field in form %}
+              <div class="form-row">
+                {{ field.label_tag }}
+                {{ field }}
+              </div>
+            {% endfor %}
 
             <div class="button-group">
                 <button type="submit" class="btn btn-green">Update 💾</button>

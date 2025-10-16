@@ -89,11 +89,15 @@ def add_book(request):
 @login_required
 def edit_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
+    my_books = request.session.get('my_books', [])
+
+    if not request.user.is_superuser and book.id not in my_books:
+        return redirect('home')  
+
     if request.method == 'POST':
         form = BookForm(request.POST, request.FILES, instance=book)
         if form.is_valid():
             form.save()
-            messages.success(request, "Book updated successfully ✅")
             return redirect('home')
     else:
         form = BookForm(instance=book)
@@ -105,13 +109,31 @@ def edit_book(request, book_id):
     })
 
 
+
+
 @login_required
 def delete_book(request, id):
-    book = get_object_or_404(Book, id=id)
+    try:
+        book = Book.objects.get(id=id)
+    except Book.DoesNotExist:
+        return redirect('home')  
+
+    my_books = request.session.get('my_books', [])
+
+    
+    if not request.user.is_superuser and book.id not in my_books:
+        return redirect('home')  
+
     if request.method == "POST":
         book.delete()
+        if not request.user.is_superuser and book.id in my_books:
+            my_books.remove(book.id)
+            request.session['my_books'] = my_books
         return redirect('home')
+
     return render(request, 'books/delete_book.html', {'book': book})
+
+
 
 
 @login_required
@@ -241,10 +263,18 @@ def book_detail(request, id):
 def add_book(request):
     form = BookForm(request.POST or None, request.FILES or None)
     if form.is_valid():
-        form.save()
+        new_book = form.save()
+        # لكل مستخدم عادي: سجل الكتاب في السشن
+        if not request.user.is_superuser:
+            my_books = request.session.get('my_books', [])
+            if new_book.id not in my_books:
+                my_books.append(new_book.id)
+                request.session['my_books'] = my_books
         messages.success(request, "Book added successfully!")
         return redirect('home')
+    
     return render(request, 'books/add_book.html', {'form': form})
+
 
 def delete_comment(request, id):
     comment = get_object_or_404(Comment, id=id)

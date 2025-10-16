@@ -127,6 +127,30 @@ body.dark-mode textarea {
     color: #f4f4f9;
     border-color: #555;
 }
+
+#messages-container {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 9999;
+}
+
+.message-box {
+    padding:10px;
+    border-radius:8px;
+    margin-bottom:12px;
+    font-weight: 500;
+}
+
+.message-box.success {
+    background-color: #ddffdd;
+    color: #060;
+}
+
+.message-box.error {
+    background-color: #ffdddd;
+    color: #a00;
+}
 </style>
 
 <div class="manage-container">
@@ -134,14 +158,22 @@ body.dark-mode textarea {
         <h2>{% if is_edit %}Edit Book{% else %}Add New Book{% endif %}</h2>
 
         {% if messages %}
-          {% for message in messages %}
-            <div style="padding:10px; border-radius:8px; margin-bottom:12px;
-                        background-color:{% if message.tags == 'error' %}#ffdddd{% else %}#ddffdd{% endif %};
-                        color:{% if message.tags == 'error' %}#a00{% else %}#060{% endif %};
-                        font-weight: 500;">
-                {{ message }}
-            </div>
-          {% endfor %}
+          <div id="messages-container">
+            {% for message in messages %}
+              <div class="message-box {% if message.tags == 'error' %}error{% else %}success{% endif %}">
+                  {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+
+          <script>
+            setTimeout(function() {
+              const container = document.getElementById('messages-container');
+              if (container) {
+                container.style.display = 'none';
+              }
+            }, 2000); 
+          </script>
         {% endif %}
 
         <form method="POST" enctype="multipart/form-data">

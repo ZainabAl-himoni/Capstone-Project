@@ -52,18 +52,20 @@ NestBook is a web application that allows users to create and manage their perso
 
 ### 🧭 **User Stories**
 
-- As a **user**, I can register and log in to my account.  
-- As a **user**, I can add new categories to organize my books.  
-- As a **user**, I can add new books with details such as **title**, **author**, **description**, **price**, **image**, **pages**, **rental price**, and **status**.  
-- As a **user**, I can assign a book to a specific category.  
-- As a **user**, I can view all books  
-- As a **user**, I can edit or delete my own books.  
-- As a **user**, I can edit or delete categories that I created.  
-- As a **user**, I can add, edit, and delete comments on books.  
+- As an **Admin**, I Can manage all entities (books, categories, comments, etc.). 
+- As an **Admin**, I Can edit, delete, add any entity, regardless of who created it. 
 
-- As a **visitor**, I can view all books displayed on the public homepage.  
-- As a **visitor**, I can add, edit, and delete my own comments on books.  
-- As a **visitor**, I cannot add, edit, or delete books or categories.  
+- As a **User**, I can add new categories to organize my books.  
+- As a **User**, I can add new books with details such as **title**, **author**, **description**, **price**, **image**, **pages**, **rental price**, and **status**.  
+- As a **User**, I can assign a book to a specific category.  
+- As a **User**, I can view all books  
+- As a **User**, I can edit or delete my own books.  
+- As a **User**, I can edit or delete categories that I created.  
+- As a **User**, I can add, edit, and delete comments on books.  
+
+- As a **Visitor**, I can view all books displayed on the public homepage.  
+- As a **Visitor**, I can add, edit, and delete my own comments on books.  
+- As a **Visitor**, I cannot add, edit, or delete books or categories.  
 
 
 ---

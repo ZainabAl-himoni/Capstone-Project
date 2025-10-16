@@ -67,21 +67,70 @@ body.dark-mode .btn-secondary,
 body.dark-mode .btn-danger {
     opacity: 0.9;
 }
+
+#messages-container {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 9999;
+}
+
+.message-box {
+    padding:10px;
+    border-radius:8px;
+    margin-bottom:12px;
+    font-weight: 500;
+}
+
+.message-box.success {
+    background-color: #ddffdd;
+    color: #060;
+}
+
+.message-box.error {
+    background-color: #ffdddd;
+    color: #a00;
+}
 </style>
 
 <div class="manage-container">
     <div class="book-form">
         <h2>Confirm Delete</h2>
 
-        <p>Are you sure you want to delete the book: <strong>{{ book.title }}</strong>?</p>
+        {% if book %}
+            <p>Are you sure you want to delete the book: <strong>{{ book.title }}</strong>?</p>
 
-        <form method="post">
-            {% csrf_token %}
-            <div class="button-group">
-                <button type="submit" class="btn btn-danger">Yes, Delete</button>
-                <a href="{% url 'home' %}" class="btn btn-secondary">Cancel</a>
+            <form method="post">
+                {% csrf_token %}
+                <div class="button-group">
+                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                    <a href="{% url 'home' %}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        {% else %}
+            <p>The book has been deleted.</p>
+            <a href="{% url 'home' %}" class="btn btn-secondary">Back to Home</a>
+        {% endif %}
+
+        {% if messages %}
+            <div id="messages-container">
+                {% for message in messages %}
+                    <div class="message-box {% if message.tags == 'error' %}error{% else %}success{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
             </div>
-        </form>
+
+            <script>
+                setTimeout(function() {
+                    const container = document.getElementById('messages-container');
+                    if (container) {
+                        container.style.display = 'none';
+                    }
+                }, 2000);
+            </script>
+        {% endif %}
+
     </div>
 </div>
 {% endblock %}
